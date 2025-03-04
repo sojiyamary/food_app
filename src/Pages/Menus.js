@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Hero from "./Hero";
-import Specialdishes from "./Specialdishes";
-import FilteredDishes from "./FilteredDishes";
+import Hero from "../components/Hero";
+import Specialdishes from "../components/Specialdishes";
+import FilteredDishes from "../components/FilteredDishes";
 
 function Menus() {
     const [menu, setMenu] = useState([]);
@@ -11,7 +11,7 @@ function Menus() {
         const API_URL = "https://www.themealdb.com/api/json/v1/1/search.php?f=a";
         let response = await fetch(API_URL);
         let result = await response.json();
-        console.log(result,"result")
+        // console.log(result,"result")
          setMenu(result.meals);
        
     };

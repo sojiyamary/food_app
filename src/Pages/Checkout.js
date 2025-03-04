@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "../components/AuthContext";
+import { db } from "../components/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 function Checkout() {
-    const { user } = useContext(AuthContext);
+    const { user, cartItems, clearCart } = useContext(AuthContext);
     const navigate = useNavigate();
     const [shippingInfo, setShippingInfo] = useState({
         name: user?.email || "",
@@ -15,19 +17,44 @@ function Checkout() {
         setShippingInfo({ ...shippingInfo, [e.target.name]: e.target.value });
     };
 
-    const handleOrder = () => {
+    const handleOrder = async () => {
         if (!shippingInfo.address) {
             alert("Please enter your address!");
             return;
         }
 
-        // Simulate order success (You can integrate with a backend API)
-        alert("Order placed successfully!");
-        navigate("/"); // Redirect to home page after order
+        if (cartItems.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        if (!user) {
+            alert("You need to be logged in to place an order!");
+            return;
+        }
+
+        try {
+            console.log("Placing order...");
+            
+            const orderRef = await addDoc(collection(db, "orders"), {
+                userId: user.uid,
+                items: cartItems,
+                shippingInfo,
+                timestamp: new Date(),
+            });
+
+            console.log("Order placed successfully:", orderRef.id);
+            clearCart(); // Clear cart after successful order
+            alert("Order placed successfully!");
+            navigate("/"); // Redirect to home page
+        } catch (error) {
+            console.error("Error placing order:", error);
+            alert("Failed to place order. Please try again.");
+        }
     };
 
     return (
-        <div className="checkout-container">
+        <div className="auth-container checkout-container">
             <h2>Checkout</h2>
             <form>
                 <label>Name:</label>

@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Menus from "./components/Menus";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Menus from "./Pages/Menus";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
 import { AuthProvider } from "./components/AuthContext";
-import Checkout from "./components/Checkout";
+import Checkout from "./Pages/Checkout";
 
 import "./App.scss";
 
@@ -24,3 +24,4 @@ function App() {
 }
 
 export default App;
+
